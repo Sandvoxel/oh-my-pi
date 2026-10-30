@@ -5,6 +5,11 @@
 ### Added
 
 - Added a `maxRows` callback to `FigureMarkdown`, `SvgFigure` and `TableChartFigure` so surfaces shorter than the screen can fit their figures; zero hides a figure without delaying transcript completion ([#15661](https://github.com/can1357/oh-my-pi/issues/15661), [#15853](https://github.com/can1357/oh-my-pi/pull/15853) by [@KunoLu](https://github.com/KunoLu))
+- Added `imagePayload()`, which identifies the image an iTerm2 or Kitty image line draws regardless of its size; `iterm2ImagePayload()` is deprecated in its favor ([#17320](https://github.com/can1357/oh-my-pi/pull/17320) by [@Sandvoxel](https://github.com/Sandvoxel))
+
+### Fixed
+
+- Fixed charts and other inline images in WezTerm and Warp keeping only their bottom row in scrollback once they scrolled off the top of the screen ([#17320](https://github.com/can1357/oh-my-pi/pull/17320) by [@Sandvoxel](https://github.com/Sandvoxel))
 
 ## [18.14.0] - 2026-10-29
 
@@ -21,7 +26,6 @@
 - Fixed LSP diagnostics that incorrectly showed “No issues” before a language server had reported; such files are now shown as unverified. ([#17293](https://github.com/can1357/oh-my-pi/pull/17293) by [@JustasMasiulis](https://github.com/JustasMasiulis))
 - Fixed Esc-Esc rewind in Tern selecting interrupted turns with no visible output instead of the last displayed turn.
 - Fixed streamed code blocks losing lines that scrolled off screen before the closing fence arrived; completed lines now remain available in scrollback. ([#17333](https://github.com/can1357/oh-my-pi/pull/17333) by [@gzkGit777](https://github.com/gzkGit777))
-- Fixed charts and other inline images in WezTerm and Warp keeping only their bottom row in scrollback once they scrolled off the top of the screen ([#17320](https://github.com/can1357/oh-my-pi/pull/17320) by [@Sandvoxel](https://github.com/Sandvoxel))
 
 ## [18.13.3] - 2026-10-28
 
