@@ -1127,11 +1127,18 @@ export function encodeITerm2(
 const KITTY_APC_DATA = /\x1b_G[^;\x1b]*;([^\x1b]*)\x1b\\/g;
 
 /**
+ * Image id of a Kitty direct placement ({@link encodeKittyPlacement} or
+ * {@link encodeKittyPlacementLine}), whatever size or clip parameters follow
+ * it. Unicode-placeholder placements (`a=p,U=1`) are not direct placements.
+ */
+const KITTY_DIRECT_PLACEMENT_ID = /\x1b_Ga=p,q=2,C=1,i=(\d+)[,\x1b]/;
+
+/**
  * The image an image line draws, without the size parameters a rewrap
  * changes: the encoded data `encodeITerm2` wrote, the image id a Kitty
- * placement shows (its data was transmitted under that id), or the data a
- * self-contained Kitty `a=T` image carries. Any other image line identifies
- * itself.
+ * direct placement shows (its data was transmitted under that id; any
+ * `c=`/`r=` size or `y=`/`h=` clip is ignored), or the data a self-contained
+ * Kitty `a=T` image carries. Any other image line identifies itself.
  */
 export function imagePayload(line: string): string {
 	const start = line.indexOf(ImageProtocol.Iterm2);
@@ -1142,10 +1149,11 @@ export function imagePayload(line: string): string {
 			return line.slice(colon + 1, end === -1 ? undefined : end);
 		}
 	}
-	const placement = parseKittyDirectPlacementLine(line);
-	if (placement) return `kitty:${placement.imageId}`;
+	const kitty = unwrapTmuxPassthrough(line);
+	const placement = KITTY_DIRECT_PLACEMENT_ID.exec(kitty);
+	if (placement) return `kitty:${placement[1]}`;
 	let data = "";
-	for (const chunk of unwrapTmuxPassthrough(line).matchAll(KITTY_APC_DATA)) data += chunk[1];
+	for (const chunk of kitty.matchAll(KITTY_APC_DATA)) data += chunk[1];
 	return data === "" ? line : data;
 }
 
